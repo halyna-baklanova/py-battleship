@@ -49,9 +49,10 @@ class Battleship:
 
     def fire(self, location: tuple) -> str:
         if location in self.field:
-            ship = self.field[location]
-            ship.fire(*location)
-            if ship.is_drowned:
-                return "Sunk!"
-            return "Hit!"
+            ships_in_location = self.field[location]
+            for ship in ships_in_location:
+                ship.fire(*location)
+                if ship.is_drowned:
+                    return "Sunk!"
+                return "Hit!"
         return "Miss!"
