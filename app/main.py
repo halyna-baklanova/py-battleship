@@ -46,6 +46,7 @@ class Battleship:
                 else:
                     self.field[(deck.row, deck.column)] = [ship]
         self.ships = ships
+
     def __init__(self, ships: list) -> None:
         self.field = {}
         for ship_start, ship_end in ships:
