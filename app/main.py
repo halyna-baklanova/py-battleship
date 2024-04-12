@@ -4,6 +4,9 @@ class Deck:
         self.column = column
         self.is_alive = is_alive
 
+    def __str__(self) -> str:
+        return f"({self.row}, {self.column}) - {'Alive' if self.is_alive else 'Destroyed'}"
+
 
 class Ship:
     def __init__(
@@ -30,27 +33,57 @@ class Ship:
                 return deck
 
     def fire(self, row: int, column: int) -> None:
-        ruined_deck = self.get_deck(row, column)
-        ruined_deck.is_alive = False
-        deck_status = [deck.is_alive for deck in self.decks]
-        if not any(deck_status):
+        self.get_deck(row, column).is_alive = False
+        print([deck.is_alive for deck in self.decks])
+        if all(deck.is_alive for deck in self.decks):
             self.is_drowned = True
+        print(self.is_drowned)
+        print()
 
 
 class Battleship:
     def __init__(self, ships: tuple) -> None:
-        self.field = {}
+        self.field = {
+            (deck.row, deck.column):
+                Ship(start=ship[0], end=ship[1])
+            for ship in ships
+            for deck in Ship(start=ship[0], end=ship[1]).decks}
         self.ships = ships
-        for ship in ships:
-            battle_ship = Ship(start=ship[0], end=ship[1])
-            for deck in battle_ship.decks:
-                key = (deck.row, deck.column)
-                self.field[key] = battle_ship
 
     def fire(self, location: tuple) -> str:
         if location in self.field:
-            self.field[location].fire(location[0], location[1])
-            if self.field[location].is_drowned:
+            ship = self.field[location]
+            ship.fire(*location)
+            if ship.is_drowned:
                 return "Sunk!"
             return "Hit!"
         return "Miss!"
+
+
+ships = [
+    ((2, 0), (2, 3)),
+    ((4, 5), (4, 6)),
+    ((3, 8), (3, 9)),
+    ((6, 0), (8, 0)),
+    ((6, 4), (6, 6)),
+    ((6, 8), (6, 9)),
+    ((9, 9), (9, 9)),
+    ((9, 5), (9, 5)),
+    ((9, 3), (9, 3)),
+    ((9, 7), (9, 7)),
+]
+
+# Створення об'єкту Battleship з заданими кораблями
+battlefield = Battleship(ships)
+
+coordinates = [
+    (2, 0),
+    (2, 1),
+    (2, 2),
+    (2, 3),
+
+]
+
+for coord in coordinates:
+    result = battlefield.fire(coord)
+    print(result)
