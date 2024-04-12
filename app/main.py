@@ -47,14 +47,6 @@ class Battleship:
                     self.field[(deck.row, deck.column)] = [ship]
         self.ships = ships
 
-    def __init__(self, ships: list) -> None:
-        self.field = {}
-        for ship_start, ship_end in ships:
-            ship = Ship(start=ship_start, end=ship_end)
-            for deck in ship.decks:
-                self.field[(deck.row, deck.column)] = ship
-        self.ships = ships
-
     def fire(self, location: tuple) -> str:
         if location in self.field:
             ship = self.field[location]
